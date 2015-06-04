@@ -12,7 +12,7 @@ using namespace std;
 
     ///Juego UNO;
 
-    ///1) preguntr cuantos jugadores
+    ///1) preguntar cuantos jugadores
     ///2) Pedir nombres
     ///3)Juego.Forma_Grupo_de_Jugadores(int cantidad);
 
@@ -92,15 +92,55 @@ int Preguntar_si_Carta_es_MasCuatro(Baraja A,int siguienteCarta)
         return siguienteCarta;
     }
 
+void borrar_Carta_y_comprobar_consecuencias_de_cart_lanzada(Lista_Circular_de_Jugadores Lista , Baraja BarajaCompleta, Baraja BarajaMesa , Cart Carta_Lanzada)
+{
+
+Lista.jugador1->eliminar_Cart_Lanzada();
+    if(Carta_Lanzada.Valor==10)
+    {
+        BarajaCompleta.cartasAcumuladas=BarajaCompleta.cartasAcumuladas+2;
+    }
+
+    if(Carta_Lanzada.Valor==11)  ///Si Car. Lanzada es reversa
+    {
+        Lista.cambiar_direccion_de_juego();
+
+    }
+
+    if(Carta_Lanzada.Valor==12)
+    {
+
+        Lista.Continuidad_de_Jugadores();  //Reemplaza a lo de abjao
+        cout<<Lista.jugador1->Nombre<<" pierde turn"<<endl;
+
+    }
+
+    if(Carta_Lanzada.Valor==14)
+    {
+        BarajaMesa.act_desc_requisito=!BarajaMesa.act_desc_requisito;
+        BarajaMesa.pedir_ingrese_un_color();
+    }
+
+
+    ///A la barajaMesa add Carta Lanzada, si llego aqui es valida
+    BarajaMesa.BarajaTM.push_back(Carta_Lanzada);
+
+
+
+
+}
+
+
 
 int main()
 {
     int cantidad_Jugadores=0;
-    bool aceptaCartaLanzada;  /// esta variable me permite definir si la Carta Lanzada entrra a Baraja Mesa, so , si la carta Lanzada es correcta
+///  --!!    bool aceptaCartaLanzada;  /// esta variable me permite definir si la Carta Lanzada entrra a Baraja Mesa, so , si la carta Lanzada es correcta
     Baraja BarajaCompleta;  ///Se llama Baraja completa porque aqui se origina la baraja para todo el juego, depues de 5)se convierte en la Pila boca_Abajo
-    bool cambio_de_color; ///esta variable me dira si el jugador debe lanzar una carta de un color especifico
-    char selec_color; ///es el color elegido por el jugador que lanzo'  '+4' , 'CAMBIO DE COLOR'
-    bool act_desc_requisitoC=false; ///esta variable activa o desazctiva la funcion para lanzar carta con requisito
+
+///  --!!    bool cambio_de_color; ///esta variable me dira si el juGador debe lanzar una carta de un color especifico
+///  --!!    char selec_color; ///es el color elegido por el jugador que lanzo'  '+4' , 'CAMBIO DE COLOR'
+///  --!!    bool act_desc_requisitoC=false; ///esta variable activa o desazctiva la funcion para lanzar carta con requisito
 
     Baraja BarajaMesa;  ///Pila boca_Arriba
     BarajaCompleta.FormBaraja(); ///Forma la Baraja completa
@@ -137,7 +177,7 @@ cin>>g;
     ///Reparto cartas a los jugadores
     for (int cont=0;cont<cantidad_Jugadores*7;cont++)
     {
-        Lista.jugador1->Seven7Cartas.push_back(BarajaCompleta.BarajaTM[cont]);  ///Jugador 1 recibe la 1 Carta. Tambien se puede utilizar la linea de abajo para que el jugador reciba la carta mediante UNA FUNCION DE Jugador
+        Lista.jugador1->Seven7Cartas.push_back(BarajaCompleta.BarajaTM[0]);  /// MODIFICADO  CONT POR 0  Jugador 1 recibe la 1 Carta. Tambien se puede utilizar la linea de abajo para que el jugador reciba la carta mediante UNA FUNCION DE Jugador
        /// Lista.jugador1->recibir_Cartas(BarajaCompleta.BarajaTM[cont]);
         BarajaCompleta.BarajaTM.erase(BarajaCompleta.BarajaTM.begin()+0);  ///Elimino cada Cart repartida de la BarajaCompleta
         Lista.jugador1=Lista.jugador1->siguiente;                       ///El puntero avanza al siguiente Jugador, para que reciba la siguietne carta
@@ -171,12 +211,12 @@ cin>>g;
     BarajaMesa.Print_Baraja();
 
     ///Condicionales de las Cartas CCE Y CE
-    if(BarajaMesa.BarajaTM[0].Valor==10)
+/* AMENAZA >< SE BORRARA   if(BarajaMesa.BarajaTM[0].Valor==10)   ///+2
     {
-        cout<<"El jugadpor "<<Lista.jugador1->Nombre<<" Roba 2 Cart"<<endl;
+        cout<<"El jugadpor "<<Lista.jugador1->Nombre<<" Roba 2 Cart"<<endl;   ///fALTA TERMINAR ESTA SECCION
         cout<<"Terminar esta seccion"<<endl;
     }
-
+*/
 /* P.I */
     cout<<"Continuar -> 7"<<endl;
     cin>>g;
@@ -190,11 +230,14 @@ cin>>g;
 /* P.I */
 
     Cart Carta_Mesa(0,0,'m'),Carta_Lanzada(0,0,'l');  /// los colores de estas cartas son referenciales , sirven para instanciarlas porque se les asignara otras Cartas
-    int unsigned Posicion_de_Carta=0;  /// Variable para que el usuario elija la posicion
-    int unsigned Last_Posicion_de_cartaBoocaArriba=0;
+///  --!!    int unsigned Posicion_de_Carta=0;  /// Variable para que el usuario elija la posicion
+
     //int opcion;
-    bool sig_ant_Jugador=true;  ///Variable que determina el direccion de juego
+///  --!!    bool sig_ant_Jugador=true;  ///Variable que determina el direccion de juego
 /// Comienza el juego
+
+
+
 
 while(Lista.jugador1->Seven7Cartas.size()>0)
 {
@@ -203,8 +246,9 @@ while(Lista.jugador1->Seven7Cartas.size()>0)
     Carta_Mesa.imprimir_Atributos_deCarta();           ///Se imprime la ultima carta de BarajaMesa
     cout<<".................."<<endl;
 
+    cout<<"Cartas Acumuladas "<<BarajaCompleta.cartasAcumuladas<<endl; ///Cartas por Robar
 
-    ///Comprueba si jugador tiene cartas  para lanzar
+    ///Comprueba si jugador tiene cartas  para lanzar y elijo cart lanzada
      if (BarajaMesa.act_desc_requisito==true)  /// pregunta si hay algun requisito de color para lanzar Cart
      {
          if(Carta_Mesa.Valor==13 && Lista.jugador1->encontrar_carta_con_mismo_valor(Carta_Mesa)==true) ///Si jgador tiene Cart+4 y la cart_en _mesa es +4 entonces el jugador no recibe 4 cart
@@ -213,8 +257,9 @@ while(Lista.jugador1->Seven7Cartas.size()>0)
              Carta_Lanzada=BarajaMesa.accesa_noAccesa_Cart(Carta_Mesa,Lista.jugador1);
              ///A dar paso a cart
          }
+
          else
-        {   cout<<Lista.jugador1->Nombre<<" Roba "<<BarajaMesa.cartasAcumuladas<<" Cart"<<endl;
+        {   cout<<Lista.jugador1->Nombre<<" Roba AUTOMATIC. "<<BarajaMesa.cartasAcumuladas<<" Cart"<<endl;
             BarajaCompleta.Aumentar_n_Cart(Lista.jugador1->Seven7Cartas,BarajaCompleta.cartasAcumuladas);   ///Roba n Cart
 
         }
@@ -230,7 +275,7 @@ while(Lista.jugador1->Seven7Cartas.size()>0)
             }
             else/// si no tiene entonces Robar Cartas_Acumuladas
             {
-            cout<<Lista.jugador1->Nombre<<" Roba "<<BarajaMesa.cartasAcumuladas<<" Cart"<<endl;
+            cout<<Lista.jugador1->Nombre<<" Roba AUTOMATIC."<<BarajaMesa.cartasAcumuladas<<" Cart"<<endl;
             BarajaCompleta.Aumentar_n_Cart(Lista.jugador1->Seven7Cartas,BarajaCompleta.cartasAcumuladas);
             }
          }
@@ -241,17 +286,18 @@ while(Lista.jugador1->Seven7Cartas.size()>0)
      {
 
          cout<<"entre.......................................................................****"<<endl;
-         if(Carta_Mesa.Valor==10 && BarajaMesa.cartasAcumuladas>1)  /// el ultimo argumento de if pregunta si el jugador previo se llevo las 2 or more cartas acumuladas
+         if(Carta_Mesa.Valor==10 && BarajaMesa.cartasAcumuladas>1)  /// el ultimo argumento de if pregunta si el jugador previo se llevo las 2 or mas cartas acumuladas
          {
             if(Lista.jugador1->encontrar_carta_con_mismo_valor(Carta_Mesa)==true)
             {
                Carta_Lanzada=BarajaMesa.accesa_noAccesa_Cart(Carta_Mesa,Lista.jugador1);
+               borrar_Carta_y_comprobar_consecuencias_de_cart_lanzada(Lista,BarajaCompleta,BarajaMesa,Carta_Lanzada);
                 ///a dar_paso_a_Car
             }
             else
             {
 
-            cout<<Lista.jugador1->Nombre<<" Roba "<<BarajaMesa.cartasAcumuladas<<" Cart"<<endl;
+            cout<<Lista.jugador1->Nombre<<" Roba AUTOMATIC. "<<BarajaMesa.cartasAcumuladas<<" Cart"<<endl;
              BarajaCompleta.Aumentar_n_Cart(Lista.jugador1->Seven7Cartas,BarajaCompleta.cartasAcumuladas);
             }
          }
@@ -273,43 +319,6 @@ while(Lista.jugador1->Seven7Cartas.size()>0)
      }
 /**************************************/
     ///Borrar Cart Lanzada de Seven7Cart
-    Lista.jugador1->eliminar_Cart_Lanzada();
-    if(Carta_Lanzada.Valor==10)
-    {
-        BarajaCompleta.cartasAcumuladas=BarajaCompleta.cartasAcumuladas+2;
-    }
-
-    if(Carta_Lanzada.Valor==11)  ///Si Car. Lanzada es reversa
-    {
-        Lista.cambiar_direccion_de_juego();
-
-    }
-
-    if(Carta_Lanzada.Valor==12)
-    {
-
-        Lista.Continuidad_de_Jugadores();  //Reemplaza a lo de abjao
-        cout<<Lista.jugador1->Nombre<<" pierde turn"<<endl;
-        /*
-        if(Lista.ante_sigui==true){
-            Lista.jugador1=Lista.jugador1->siguiente;
-         }
-        else{
-            Lista.jugador1=Lista.jugador1->anterior;
-        }*/
-    }
-
-    if(Carta_Lanzada.Valor==14)
-    {
-        BarajaMesa.act_desc_requisito=!BarajaMesa.act_desc_requisito;
-        BarajaMesa.pedir_ingrese_un_color();
-    }
-
-
-    ///A la barajaMesa add Carta Lanzada, si llego aqui es valida
-    BarajaMesa.BarajaTM.push_back(Carta_Lanzada);
-
-
 
 
 
@@ -324,6 +333,7 @@ while(Lista.jugador1->Seven7Cartas.size()>0)
 
 
     Lista.Continuidad_de_Jugadores(); ///probr q funcione
+    cout<<"Cartas Acumuladas "<<BarajaCompleta.cartasAcumuladas<<endl;
     cout<<"JuGADOR SIGUIENTE"<<endl;
     }
 

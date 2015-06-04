@@ -21,6 +21,7 @@ class Cart
 
 class Jugador
 {
+    friend class Baraja;
     public:
         Jugador *siguiente,*anterior;
         string Nombre;

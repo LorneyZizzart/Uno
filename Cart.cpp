@@ -63,12 +63,14 @@ void Jugador::cambio_de_estado_de_haber_dicho_UNO()
     }
 }
 
+
 int Jugador::elegir_posicion_de_Carta()
 {
     int unsigned posicion_de_Carta=0;
-    while(posicion_de_Carta<1 || posicion_de_Carta>Seven7Cartas.size() || posicion_de_Carta==117)
+    while(posicion_de_Carta<1 || posicion_de_Carta>Seven7Cartas.size() || posicion_de_Carta==117 )
             {
                 cout<<"Elige una carta del 1-"<<Seven7Cartas.size()<<endl;
+
                 cin>>posicion_de_Carta;
                 if(posicion_de_Carta==117)
                {
@@ -77,6 +79,7 @@ int Jugador::elegir_posicion_de_Carta()
                 Decir_UNO(); ///El estado del Jugador es que tiene 1 Carta
                 cout<<endl;
                 }
+
             }
     posicion_Last_Cart=posicion_de_Carta-1; ///Guarda el numero de posicion de carta en Jugador
     return posicion_de_Carta-1;
@@ -162,7 +165,6 @@ bool Jugador::buscar_Cart(int valor_Cart)
 Baraja::Baraja()
 {
     cartasAcumuladas=0;
-
 }
 
 bool Baraja::compararColor(Cart Carta_comparada)
@@ -187,8 +189,15 @@ bool Baraja::compararValor(Cart Carta_comparada)
 
 
 
+
+
+
+
+
+
 vector<Cart> Baraja ::FormBaraja()
 {
+
     int i;
     int cont;
     char colores[4] = {'r','b','y','g'};
@@ -200,12 +209,6 @@ vector<Cart> Baraja ::FormBaraja()
         BarajaTM.push_back(*actual);
     }
 
-/// ****Esta es otra forma de agregar las Cartas sin ustilizar *actual
-    /*
-    for (int ap2=0;ap2<4;ap2++) ///Forma las cartas 0 de cada color. comentVariab Contador_cartas = 4
-    {
-        BarajaTM.push_back(Cart(0,0,colores[ap2]));
-    }*/
 
 
 
@@ -241,7 +244,7 @@ vector<Cart> Baraja ::FormBaraja()
                 actual=new Cart(i,20,'g');
                 BarajaTM.push_back(*actual);*/
               //for//
-                for(int asU1=0;asU1<4;asU1++)
+               for(int asU1=0;asU1<4;asU1++)
                 {
                     actual=new Cart(i,20,colores[asU1]);
                     BarajaTM.push_back(*actual);
@@ -263,6 +266,9 @@ vector<Cart> Baraja ::FormBaraja()
     }
     return BarajaTM;
 }
+
+
+
 
 vector<Cart> Baraja::Aleatoriar(vector<Cart> Baraja_sin_Mezclar)
 {
@@ -345,10 +351,23 @@ bool Baraja::Comparar_si_cartas_identicas(Cart Carta_aComparar, Cart Cart_Compar
 
 Cart Baraja:: accesa_noAccesa_Cart (Cart Cart_en_Mesa,Jugador* jugadorActual)
 {
+    int i=2;
     cout<<"ok"<<endl;
 Cart Cart_Lanzada(0,0,'p');
 int posicionCart;
 jugadorActual->imprimir_Cartas();
+cout<<"Que desea hacer: 1= robar carta   2=elegir car."<<endl;
+cin>>i;
+if(i==1)
+{
+    Aumentar_n_Cart(jugadorActual->Seven7Cartas,cartasAcumuladas);
+    cout<<"Cartas totales"<<endl;
+    jugadorActual->imprimir_Cartas();
+
+    return Cart_en_Mesa;
+}
+else
+{
 posicionCart=jugadorActual->elegir_posicion_de_Carta();
 cout<<"Debio imprimir peticion de elegir posicion de cart"<<endl;
 Cart_Lanzada=jugadorActual->lanzar_carta(posicionCart);
@@ -370,7 +389,14 @@ if(Cart_en_Mesa.Valor==10)
 {
     if(Cart_Lanzada.Valor==10)
         {
-            //cartasAcumuladas=cartasAcumuladas+2; ///No stoy segura
+
+            //cartasAcumuladas=cartasAcumuladas+2; ///No estoy segura
+            if(cartasAcumuladas==1)
+            {
+                cartasAcumuladas+=1;
+            }
+            else{cartasAcumuladas=cartasAcumuladas+2;}
+            cout<<cartasAcumuladas;
             return Cart_Lanzada;
         }
     if(cartasAcumuladas>1 && Cart_Lanzada.Valor!=10)
@@ -441,7 +467,7 @@ if(Cart_en_Mesa.Valor==14)
     return accesa_noAccesa_Cart(Cart_en_Mesa,jugadorActual);
 }
  return Cart_Lanzada;
-
+}
 }
 
 
